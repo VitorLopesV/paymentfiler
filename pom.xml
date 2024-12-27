@@ -23,8 +23,8 @@
 	</developers>
     <modules>
         <module>organizer</module>
-		<module>compressor</module>
 		<module>admin</module>
+		<module>core</module>
 	</modules>
     <scm>
 		<connection/>
