@@ -24,8 +24,8 @@ public class FileOrganizationAgent implements OrganizerAgent {
     /**
      * Construtor.
      *
-     * @param originPath        {@link #originPath}
-     * @param destinationPath   {@link #destinationPath}
+     * @param originPath      {@link #originPath}
+     * @param destinationPath {@link #destinationPath}
      */
     public FileOrganizationAgent(Path originPath, Path destinationPath) {
         this.originPath = originPath;
@@ -36,7 +36,6 @@ public class FileOrganizationAgent implements OrganizerAgent {
      * Cria uma pasta para cada mês.
      *
      * @param directory Diretório onde a pasta será criada.
-     *
      * @return Caminho completo onde os arquivos serão movidos.
      */
     private Path createFolder(Path directory) {
@@ -61,9 +60,11 @@ public class FileOrganizationAgent implements OrganizerAgent {
                     try {
                         Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
                         Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
-                        System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE) + "%n", file.getFileName(), this.destinationPath);
+                        System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE) + "%n", file.getFileName(),
+                                this.destinationPath);
                     } catch (IOException e) {
-                        System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE) +"%n", file.getFileName(), e.getMessage());
+                        System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE) + "%n",
+                                file.getFileName(), e.getMessage());
                     }
                 });
             }
