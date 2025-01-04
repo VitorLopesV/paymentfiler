@@ -5,4 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface DataSourceConfigurationRepository extends MongoRepository<DataSourceConfigurator, String> {
 
+    DataSourceConfigurator findByName(String name);
+
 }

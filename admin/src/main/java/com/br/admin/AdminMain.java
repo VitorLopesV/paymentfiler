@@ -1,12 +1,12 @@
 package com.br.admin;
 
-import com.br.admin.config.SpringContext;
-import com.br.admin.config.SpringConfig; // Adicione sua classe de configuração aqui
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class AdminMain extends Application {
 
@@ -14,27 +14,31 @@ public class AdminMain extends Application {
         launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        // Inicializa o contexto do Spring
-        SpringContext.initContext(SpringConfig.class);
-
-        // Carrega o FXML e configura o controlador
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMIN_FXML_FILE));
-        if (loader.getLocation() == null) {
-            throw new RuntimeException("FXML file not found: " + ADMIN_FXML_FILE);
-        }
-        loader.setControllerFactory(SpringContext::getBean); // Injeta o controller pelo Spring
-
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle(ADMIN_TITLE);
-        primaryStage.show();
-    }
+    private static ConfigurableApplicationContext springContext;
 
     public static final String ADMIN_TITLE = "Admin Panel";
 
     public static final String ADMIN_FXML_FILE = "/com/br/admin/fxml/AdminFXMLFile.fxml";
+
+    @Override
+    public void init() {
+        springContext = SpringApplication.run(SpringBootInitializer.class);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMIN_FXML_FILE));
+        loader.setControllerFactory(springContext::getBean);
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        primaryStage.setTitle(ADMIN_TITLE);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        springContext.close();
+    }
 }
