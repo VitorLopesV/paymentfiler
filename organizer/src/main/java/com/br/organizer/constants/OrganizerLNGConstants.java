@@ -13,4 +13,10 @@ public class OrganizerLNGConstants {
 
     /** Arquivo não foi movido para pasta de destino. */
     public static final String ORGANIZER_LNG_ERROR_MOVED_FILE = "Erro ao mover arquivo %s para pasta %s";
+
+    /** diretório de origem não existe. */
+    public static final String ORGANIZER_LNG_CREATE_ORIGIN_DIRECTORY = "diretório de origem %s foi criado";
+
+    /** Não existem arquivos para ser movido. */
+    public static final String ORGANIZER_LNG_NOT_EXIST_FILE_TO_MOVE = "Não existem arquivos para ser movido";
 }

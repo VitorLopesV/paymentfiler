@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
@@ -54,22 +55,27 @@ public class FileOrganizationAgent implements OrganizerAgent {
 
     @Override
     public void run() throws IOException {
-        if (originPath.toFile().exists()) {
-            try (Stream<Path> filesList = Files.list(originPath)) {
-                filesList.filter(Files::isRegularFile).forEach(file -> {
-                    try {
-                        Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
-                        Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
-                        System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE) + "%n", file.getFileName(),
-                                this.destinationPath);
-                    } catch (IOException e) {
-                        System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE) + "%n",
-                                file.getFileName(), e.getMessage());
-                    }
-                });
+        if (!originPath.toFile().exists()) {
+            Files.createDirectories(originPath);
+            System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_CREATE_ORIGIN_DIRECTORY) + "%n", originPath);
+        }
+        try (Stream<Path> filesList = Files.list(originPath)) {
+            List<Path> files = filesList.toList();
+            if (files.isEmpty()) {
+                System.out.print(OrganizerLNGConstants.ORGANIZER_LNG_NOT_EXIST_FILE_TO_MOVE);
+                return;
             }
-        } else {
-            Files.createDirectories(destinationPath);
+            files.forEach(file -> {
+                try {
+                    Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
+                    Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
+                    System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE) + "%n", file.getFileName(),
+                            this.destinationPath);
+                } catch (IOException e) {
+                    System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE) + "%n", file.getFileName(),
+                            e.getMessage());
+                }
+            });
         }
     }
 }
