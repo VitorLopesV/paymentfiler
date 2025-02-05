@@ -33,8 +33,10 @@
 
     <build>
         <plugins>
+            <!-- Plugin para criar o JAR com dependências -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -56,8 +58,34 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Plugin para copiar o arquivo .bat -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-batch-file</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/resources/com/br/bat</directory>
+                                    <includes>
+                                        <include>**/*.bat</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        </build>
+    </build>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
