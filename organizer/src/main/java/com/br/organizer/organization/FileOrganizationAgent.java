@@ -47,8 +47,6 @@ public class FileOrganizationAgent implements OrganizerAgent {
 
         if (folder.mkdir()) {
             System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_CREATED_FOLDER) + "%n", folderName);
-        } else {
-            System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_FOLDER_ALREADY_EXIST) + "%n", folderName);
         }
         return folder.toPath();
     }
@@ -59,23 +57,45 @@ public class FileOrganizationAgent implements OrganizerAgent {
             Files.createDirectories(originPath);
             System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_CREATE_ORIGIN_DIRECTORY) + "%n", originPath);
         }
+
         try (Stream<Path> filesList = Files.list(originPath)) {
             List<Path> files = filesList.toList();
+
             if (files.isEmpty()) {
                 System.out.print(OrganizerLNGConstants.ORGANIZER_LNG_NOT_EXIST_FILE_TO_MOVE);
                 return;
             }
-            files.forEach(file -> {
+
+            for (Path file : files) {
                 try {
-                    Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
-                    Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
-                    System.out.printf((OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE) + "%n", file.getFileName(),
-                            this.destinationPath);
+                    // Se for um diretório, cria a pasta correspondente no destino e move os arquivos
+                    if (Files.isDirectory(file)) {
+                        Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
+                        Files.createDirectories(finalDirectory);
+
+                        try (Stream<Path> subFiles = Files.list(file)) {
+                            subFiles.forEach(subFile -> {
+                                try {
+                                    Files.move(subFile, finalDirectory.resolve(subFile.getFileName()),
+                                            StandardCopyOption.REPLACE_EXISTING);
+                                    System.out.printf("Arquivo '%s' movido para a pasta '%s'.%n", subFile.getFileName(),
+                                            finalDirectory);
+                                } catch (IOException e) {
+                                    System.err.printf("Erro ao mover o arquivo '%s': %s%n", subFile.getFileName(),
+                                            e.getMessage());
+                                }
+                            });
+                        }
+                    } else {
+                        // Move o arquivo diretamente para o destino
+                        Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
+                        Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.printf("Arquivo '%s' movido para '%s'.%n", file.getFileName(), finalDirectory);
+                    }
                 } catch (IOException e) {
-                    System.err.printf((OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE) + "%n", file.getFileName(),
-                            e.getMessage());
+                    System.err.printf("Erro ao processar o arquivo '%s': %s%n", file.getFileName(), e.getMessage());
                 }
-            });
+            }
         }
     }
 }
