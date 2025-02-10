@@ -9,9 +9,9 @@ if %ERRORLEVEL%==0 (
     schtasks /delete /tn %taskname% /f
 )
 
-REM Cria uma nova tarefa agendada para rodar ao iniciar sessão
+REM Cria uma nova tarefa agendada para rodar a cada hora
 echo Criando nova tarefa agendada %taskname%
-schtasks /create /tn %taskname% /tr "%jarfilepath%" /sc hourly /mo 1 /ru "SYSTEM" /f
+schtasks /create /tn %taskname% /tr "java -Xmx256m -jar \"%jarfilepath%\"" /sc hourly /mo 1 /ru "SYSTEM" /f
 
-echo Tarefa agendada criada com sucesso para rodar no login de qualquer usuário com limite de memória definido
+echo Tarefa agendada criada com sucesso para rodar a cada hora com limite de memória definido
 pause
