@@ -40,6 +40,7 @@ public class AdminMainController {
                 new DataSourceConfigurator("Caminho de origem", this.textFieldOriginPath.getText()));
         this.dataSourceConfigurationService.save(
                 new DataSourceConfigurator("Caminho de destino", this.textFieldDestinationPath.getText()));
+        System.out.println("Salvo com sucesso!");
     }
 
     public String getDataSourceValueForName(String name){

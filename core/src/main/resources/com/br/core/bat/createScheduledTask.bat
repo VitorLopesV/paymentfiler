@@ -11,7 +11,7 @@ if %ERRORLEVEL%==0 (
 
 REM Cria uma nova tarefa agendada para rodar ao iniciar sessão
 echo Criando nova tarefa agendada %taskname%
-schtasks /create /tn %taskname% /tr "%jarfilepath%" /sc onlogon /ru "SYSTEM" /f
+schtasks /create /tn %taskname% /tr "%jarfilepath%" /sc hourly /mo 1 /ru "SYSTEM" /f
 
 echo Tarefa agendada criada com sucesso para rodar no login de qualquer usuário com limite de memória definido
 pause
