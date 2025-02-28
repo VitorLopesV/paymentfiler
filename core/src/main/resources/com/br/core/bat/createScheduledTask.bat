@@ -9,9 +9,9 @@ if %ERRORLEVEL%==0 (
     schtasks /delete /tn %taskname% /f
 )
 
-REM Cria uma nova tarefa agendada para rodar a cada hora
+REM Criar uma nova tarefa agendada para rodar a cada 5 minutos
 echo Criando nova tarefa agendada %taskname%
-schtasks /create /tn %taskname% /tr "java -Xmx256m -jar \"%jarfilepath%\"" /sc hourly /mo 1 /ru "SYSTEM" /f
+schtasks /create /tn %taskname% /tr "java -Xmx128m -jar \"%jarfilepath%\"" /sc minute /mo 5 /ru "SYSTEM" /f/np
 
 echo Tarefa agendada criada com sucesso para rodar a cada hora com limite de memória definido
 pause
