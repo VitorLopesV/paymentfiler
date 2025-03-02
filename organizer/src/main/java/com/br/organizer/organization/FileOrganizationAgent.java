@@ -78,10 +78,11 @@ public class FileOrganizationAgent implements OrganizerAgent {
                                 try {
                                     Files.move(subFile, finalDirectory.resolve(subFile.getFileName()),
                                             StandardCopyOption.REPLACE_EXISTING);
-                                    System.out.printf("Arquivo '%s' movido para a pasta '%s'.%n", subFile.getFileName(),
+                                    System.out.printf(OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE, subFile.getFileName(),
                                             finalDirectory);
+                                    System.out.println("\n");
                                 } catch (IOException e) {
-                                    System.err.printf("Erro ao mover o arquivo '%s': %s%n", subFile.getFileName(),
+                                    System.err.printf(OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE, subFile.getFileName(),
                                             e.getMessage());
                                 }
                             });
@@ -90,10 +91,11 @@ public class FileOrganizationAgent implements OrganizerAgent {
                         // Move o arquivo diretamente para o destino
                         Path finalDirectory = createFolder(destinationPath).resolve(file.getFileName());
                         Files.move(file, finalDirectory, StandardCopyOption.REPLACE_EXISTING);
-                        System.out.printf("Arquivo '%s' movido para '%s'.%n", file.getFileName(), finalDirectory);
+                        System.out.printf(OrganizerLNGConstants.ORGANIZER_LNG_MOVED_FILE, file.getFileName(), finalDirectory);
+                        System.out.println("\n");
                     }
                 } catch (IOException e) {
-                    System.err.printf("Erro ao processar o arquivo '%s': %s%n", file.getFileName(), e.getMessage());
+                    System.err.printf(OrganizerLNGConstants.ORGANIZER_LNG_ERROR_MOVED_FILE, file.getFileName(), e.getMessage());
                 }
             }
         }
